@@ -23,6 +23,7 @@ if (isEksi) {
 
   topicListMutations();
   topicMutations();
+  imageMutations();
 }
 
 // // Communicate with background file by sending a message
