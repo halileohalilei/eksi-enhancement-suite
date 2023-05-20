@@ -1,6 +1,11 @@
 'use strict';
 
+import { UserPreferences } from './UserPreferences';
 import { eksiDomains } from './constants';
+import { isEksi } from './helpers/isEksi';
+import { imageMutations } from './mutations/imageMutations';
+import { topicListMutations } from './mutations/topicListMutations';
+import { topicMutations } from './mutations/topicMutations';
 
 // Content script file will run in the context of web page.
 // With content script you can manipulate the web pages using
@@ -13,52 +18,11 @@ import { eksiDomains } from './constants';
 // For more information on Content Scripts,
 // See https://developer.chrome.com/extensions/content_scripts
 
-const currentUrl = new URL(document.location.href);
-const isEksi = eksiDomains.includes(currentUrl.hostname);
 if (isEksi) {
   console.log("Eksi Enhancement Suite'e hos geldin!");
-}
 
-let globalTopicList: HTMLUListElement;
-
-const filterTopics = (topicList: HTMLUListElement) => {
-  for (let i = 0; i < topicList.children.length; i += 1) {
-    const listItem = topicList.children.item(i);
-    const anchor = listItem?.children.item(0) as HTMLAnchorElement;
-    // if (anchor.innerText.includes('a')) {
-    //   listItem?.removeChild(anchor);
-    // }
-  }
-};
-
-let topicListObserver = new MutationObserver(function (mutations) {
-  mutations.forEach(function (mutation) {
-    if (mutation.type === 'childList') {
-      const children = mutation.target.childNodes;
-      for (const node of children) {
-        if (node.nodeName === 'UL') {
-          const topicList = node as HTMLUListElement;
-          if (!globalTopicList) {
-            globalTopicList = topicList;
-          }
-          filterTopics(topicList);
-        }
-      }
-    }
-  });
-});
-
-const topicListElements = document.getElementsByClassName('topic-list');
-if (topicListElements.length > 0) {
-  globalTopicList = topicListElements.item(0) as HTMLUListElement;
-  filterTopics(globalTopicList);
-
-  if (globalTopicList.parentNode) {
-    topicListObserver.observe(globalTopicList.parentNode, {
-      childList: true,
-    });
-  }
-  // console.log(topicList.children);
+  topicListMutations();
+  topicMutations();
 }
 
 // // Communicate with background file by sending a message

@@ -4,3 +4,6 @@ export const eksiDomains = [
   'eksisozluk42.com',
   'eksisozluk1923.com',
 ];
+
+export const ignoredTopicsLocalStorageKey = 'ignoredTopicHrefs';
+export const favoriteTopicsLocalStorageKey = 'favoriteTopicHrefs';
